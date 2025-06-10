@@ -13,14 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { authClient } from "@/lib/auth/auth.client";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { useCreateAccount } from "../../hooks/create-account";
 import {
   CreateAccountSchema,
   CreateAccountSchemaType,
@@ -30,8 +27,6 @@ export function CreateAccountForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<CreateAccountSchemaType>({
     resolver: zodResolver(CreateAccountSchema),
     defaultValues: {
@@ -41,36 +36,18 @@ export function CreateAccountForm({
     },
   });
 
-  const onSubmit = (data: CreateAccountSchemaType) => {
-    authClient.signUp.email(
-      {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      },
-      {
-        onRequest: () => {
-          setIsLoading(true);
-        },
-        onSuccess: () => {
-          router.push("/");
-        },
-        onError: ({ error }) => {
-          toast.error(error.message, {
-            position: "top-center",
-          });
-          setIsLoading(false);
-        },
-      }
-    );
-  };
+  const { createAccountWithEmail, createAccountWithSocial, isLoading } =
+    useCreateAccount();
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <Form {...form}>
-            <form className="p-6 md:p-8" onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+              className="p-6 md:p-8"
+              onSubmit={form.handleSubmit(createAccountWithEmail)}
+            >
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col">
                   <h1 className="text-6xl font-extrabold">Hello!</h1>
@@ -128,27 +105,33 @@ export function CreateAccountForm({
                 </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                   <span className="bg-card text-muted-foreground relative z-10 px-2">
-                    Or
+                    Or continue with
                   </span>
                 </div>
-                <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-4">
                   <Button
                     variant="outline"
                     type="button"
                     className="w-full"
                     disabled={isLoading}
+                    onClick={() => {
+                      createAccountWithSocial("google");
+                    }}
                   >
                     <GoogleIcon />
-                    <span>Continue with Google</span>
+                    <span>Google</span>
                   </Button>
                   <Button
                     variant="outline"
                     type="button"
                     className="w-full"
                     disabled={isLoading}
+                    onClick={() => {
+                      createAccountWithSocial("github");
+                    }}
                   >
                     <GitHubIcon />
-                    <span>Continue with GitHub</span>
+                    <span>GitHub</span>
                   </Button>
                 </div>
                 <div className="text-center text-sm">
