@@ -1,12 +1,24 @@
 import { identicon } from "@dicebear/collection";
-import { createAvatar } from "@dicebear/core";
+import { createAvatar, Options, Style } from "@dicebear/core";
 import { User } from "better-auth";
 
-export function GeneratedAvatar({ user }: { user: User }) {
-  const avatar = createAvatar(identicon, {
+type Props = {
+  user: User;
+  size?: number;
+  radius?: number;
+  style?: Style<Options>;
+};
+
+export function GeneratedAvatar({
+  user,
+  size = 100,
+  radius = 50,
+  style = identicon,
+}: Props) {
+  const avatar = createAvatar(style, {
     seed: user.name,
-    size: 100,
-    radius: 50,
+    size,
+    radius,
   });
   return <img src={avatar.toDataUri()} alt={user.name} />;
 }
