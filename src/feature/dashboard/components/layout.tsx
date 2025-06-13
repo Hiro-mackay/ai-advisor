@@ -5,6 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { PropsWithChildren } from "react";
+import { DashboardCommand } from "./command";
 import { DashboardSidebar } from "./sidebar/main";
 
 export function DashboardLayout({ children }: PropsWithChildren) {
@@ -19,6 +20,7 @@ export function DashboardLayout({ children }: PropsWithChildren) {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
+            <DashboardCommand />
           </div>
         </header>
 
