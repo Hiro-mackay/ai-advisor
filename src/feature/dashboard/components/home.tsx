@@ -1,18 +1,16 @@
 "use client";
 
-import { authClient } from "@/lib/auth/auth.client";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export function DashboardHome() {
-  const session = authClient.useSession();
-
-  if (session.isPending) {
-    return <div>Loading...</div>;
-  }
+  const trpc = useTRPC();
+  const { data } = useQuery(trpc.hello.queryOptions({ text: "Antonio" }));
 
   return (
     <div className="flex flex-col gap-4 h-full">
       <main className="flex flex-col gap-4 p-5">
-        <p className="text-5xl font-bold">Hi! {session.data?.user.name}.</p>
+        <p className="text-5xl font-bold">{data?.greeting}.</p>
       </main>
     </div>
   );
