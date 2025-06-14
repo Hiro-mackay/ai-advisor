@@ -41,7 +41,6 @@ export const agentsRouter = createTRPCRouter({
 
       return {
         agents: data,
-        total: data.length,
         page,
         limit,
         hasNextPage,
@@ -52,11 +51,16 @@ export const agentsRouter = createTRPCRouter({
 
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query<AgentType>(async ({ input }) => {
+    .query<AgentType>(async ({ input, ctx }) => {
       const [data] = await db
         .select()
         .from(agents)
-        .where(eq(agents.id, input.id));
+        .where(
+          and(
+            eq(agents.id, input.id),
+            eq(agents.userId, ctx.auth.session.userId)
+          )
+        );
       return data;
     }),
 

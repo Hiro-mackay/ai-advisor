@@ -26,7 +26,6 @@ export type AgentsQueryInputType = z.infer<typeof AgentsQueryInputSchema>;
 
 export const AgentsQuerySchema = z.object({
   agents: z.array(AgentSchema),
-  total: z.number(),
   page: z.number(),
   limit: z.number(),
   hasNextPage: z.boolean(),

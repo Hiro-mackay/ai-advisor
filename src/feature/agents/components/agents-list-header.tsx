@@ -13,6 +13,7 @@ export function AgentsListHeader() {
     <>
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">My Agents</h2>
+
         <Button onClick={() => setOpen(true)}>
           <PlusIcon className="w-4 h-4" />
           New Agent
