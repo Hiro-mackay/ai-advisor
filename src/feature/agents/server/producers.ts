@@ -3,7 +3,8 @@ import { agents } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { eq } from "drizzle-orm";
 import z from "zod";
-import { AgentType, CreateAgentSchema } from "./schema";
+import { CreateAgentSchema } from "./schema/mutation";
+import { AgentType } from "./schema/query";
 
 export const agentsRouter = createTRPCRouter({
   getAll: protectedProcedure.query<AgentType[]>(async () => {

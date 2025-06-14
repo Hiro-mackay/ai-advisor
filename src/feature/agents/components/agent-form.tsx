@@ -15,11 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {
-  AgentType,
-  CreateAgentSchema,
-  CreateAgentType,
-} from "../server/schema";
+import { CreateAgentSchema, CreateAgentType } from "../server/schema/mutation";
+import { AgentType } from "../server/schema/query";
 
 type Props = {
   onSuccess?: (agent: AgentType) => void;
