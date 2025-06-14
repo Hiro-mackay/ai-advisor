@@ -154,7 +154,7 @@ function ResponsiveDialog({
 
   if (isMobile) {
     return (
-      <Drawer>
+      <Drawer {...props}>
         <DrawerContent>
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
@@ -164,6 +164,7 @@ function ResponsiveDialog({
         </DrawerContent>
       </Drawer>
     );
+  }
   }
 
   return (
