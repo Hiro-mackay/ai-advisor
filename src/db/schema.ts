@@ -14,7 +14,8 @@ export const user = pgTable("user", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
 
 export const session = pgTable("session", {
@@ -22,7 +23,9 @@ export const session = pgTable("session", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   token: text("token").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .$onUpdateFn(() => new Date()),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id")
@@ -53,7 +56,8 @@ export const account = pgTable("account", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
 
 export const verification = pgTable("verification", {
@@ -66,7 +70,8 @@ export const verification = pgTable("verification", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
 
 export const agents = pgTable("agents", {
@@ -84,5 +89,6 @@ export const agents = pgTable("agents", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
