@@ -165,7 +165,6 @@ function ResponsiveDialog({
       </Drawer>
     );
   }
-  }
 
   return (
     <Dialog {...props}>
