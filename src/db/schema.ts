@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { nanoid } from "nanoid";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -13,7 +14,8 @@ export const user = pgTable("user", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
 
 export const session = pgTable("session", {
@@ -21,7 +23,9 @@ export const session = pgTable("session", {
   expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
   token: text("token").notNull().unique(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .$onUpdateFn(() => new Date()),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
   userId: text("user_id")
@@ -52,7 +56,8 @@ export const account = pgTable("account", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
 
 export const verification = pgTable("verification", {
@@ -65,5 +70,25 @@ export const verification = pgTable("verification", {
     .defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
+});
+
+export const agents = pgTable("agents", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  name: text("name").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+
+  instructions: text("instructions").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
     .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
 });
