@@ -10,7 +10,7 @@ export function AgentsListHeader() {
 
   return (
     <>
-      <div className="flex items-center justify-between pb-4 px-4">
+      <div className="flex items-center justify-between pb-4">
         <h2 className="text-2xl font-bold">My Agents</h2>
         <Button onClick={() => setOpen(true)}>
           <PlusIcon className="w-4 h-4" />
