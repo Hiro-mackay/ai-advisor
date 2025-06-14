@@ -38,7 +38,7 @@ export function AgentForm({
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
       onSuccess: (data) => {
-        queryClient.invalidateQueries(trpc.agents.getAll.queryOptions());
+        queryClient.invalidateQueries(trpc.agents.getAll.queryOptions({}));
 
         if (defaultValues?.id) {
           queryClient.invalidateQueries(

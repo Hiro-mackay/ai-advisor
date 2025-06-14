@@ -5,15 +5,18 @@ import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { useAgentsFilter } from "../hooks/use-agents-filter";
+import { AgentsPagination } from "./agents-pagination";
 import { AgentColumns } from "./columns";
 
 export function AgentsView() {
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.agents.getAll.queryOptions());
+  const [filters] = useAgentsFilter();
+  const { data } = useSuspenseQuery(trpc.agents.getAll.queryOptions(filters));
 
   return (
     <>
-      {data.length === 0 ? (
+      {data.agents.length === 0 ? (
         <Card>
           <EmptyState
             title="No agents found"
@@ -21,11 +24,15 @@ export function AgentsView() {
           />
         </Card>
       ) : (
-        <DataTable
-          columns={AgentColumns}
-          data={data}
-          options={{ headerState: "hidden" }}
-        />
+        <>
+          <DataTable
+            columns={AgentColumns}
+            data={data.agents}
+            options={{ headerState: "hidden" }}
+          />
+
+          <AgentsPagination data={data} />
+        </>
       )}
     </>
   );

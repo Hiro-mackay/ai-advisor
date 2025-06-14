@@ -8,6 +8,8 @@ type Props = {
   };
 };
 
+const DEFAULT_DISPLAY_COUNT = 4;
+
 export function LoadingState({ type }: Props) {
   switch (type) {
     case "card":
@@ -21,7 +23,11 @@ export function LoadingState({ type }: Props) {
   }
 }
 
-function LoadingTable({ displayCount = 8 }: { displayCount?: number }) {
+function LoadingTable({
+  displayCount = DEFAULT_DISPLAY_COUNT,
+}: {
+  displayCount?: number;
+}) {
   return (
     <Card className="divide-y gap-0 p-0">
       {Array.from({ length: displayCount }).map((_, index) => (
@@ -37,7 +43,11 @@ function LoadingTable({ displayCount = 8 }: { displayCount?: number }) {
   );
 }
 
-function LoadingCard({ displayCount = 8 }: { displayCount?: number }) {
+function LoadingCard({
+  displayCount = DEFAULT_DISPLAY_COUNT,
+}: {
+  displayCount?: number;
+}) {
   return (
     <div className="flex gap-x-4 gap-y-8 flex-wrap ">
       {Array.from({ length: displayCount }).map((_, index) => (
