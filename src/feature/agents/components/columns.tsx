@@ -10,7 +10,7 @@ export const AgentColumns: ColumnDef<AgentType>[] = [
     size: 200,
     cell: ({ row }) => {
       return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col">
           <div className="flex items-center gap-2">
             <AgentAvatar agent={row.original} size={32} />
             <div className="flex flex-col">
