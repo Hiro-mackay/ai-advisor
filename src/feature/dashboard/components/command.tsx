@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
-  CommandDialog,
   CommandEmpty,
   CommandInput,
   CommandList,
+  ResponsiveCommandDialog,
 } from "@/components/ui/command";
 
 export function DashboardCommand() {
@@ -40,12 +40,12 @@ export function DashboardCommand() {
           <span className="text-xs">&#8984;</span>K
         </kbd>
       </Button>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <ResponsiveCommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
         </CommandList>
-      </CommandDialog>
+      </ResponsiveCommandDialog>
     </>
   );
 }
