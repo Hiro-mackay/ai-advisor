@@ -20,6 +20,7 @@ import { Card } from "./card";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  className?: string;
   data: TData[];
   options?: {
     headerState?: "sticky" | "static" | "hidden";
@@ -28,6 +29,7 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
+  className,
   data,
   options,
 }: DataTableProps<TData, TValue>) {
@@ -38,8 +40,8 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <Card className="p-0">
-      <Table>
+    <Card className="p-0 ">
+      <Table className={className}>
         <TableHeader
           className={cn(
             getTableHeaderStateStyles(options?.headerState ?? "sticky")

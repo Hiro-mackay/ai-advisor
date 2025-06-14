@@ -4,37 +4,6 @@ import { headers } from "next/headers";
 import { cache } from "react";
 import superjson from "superjson";
 
-// Create a custom transformer
-const dateTransformer = {
-  input: (data: unknown) => data,
-  output: (data: unknown) => {
-    if (data && typeof data === "object") {
-      const transformDates = (
-        obj: Record<string, unknown>
-      ): Record<string, unknown> => {
-        if (obj === null || typeof obj !== "object") return obj;
-
-        if (Array.isArray(obj)) {
-          return obj.map(transformDates);
-        }
-
-        const result: Record<string, unknown> = {};
-        for (const [key, value] of Object.entries(obj)) {
-          if (key === "createdAt" || key === "updatedAt") {
-            result[key] = new Date(value as string);
-          } else {
-            result[key] = transformDates(value as Record<string, unknown>);
-          }
-        }
-        return result;
-      };
-
-      return transformDates(data as Record<string, unknown>);
-    }
-    return data;
-  },
-};
-
 export const createTRPCContext = cache(async () => {
   /**
    * @see: https://trpc.io/docs/server/context
