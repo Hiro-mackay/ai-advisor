@@ -17,9 +17,9 @@ export function AgentsPagination({ data }: Props) {
       totalPages={data.totalPages}
       hasNextPage={data.hasNextPage}
       hasPreviousPage={data.hasPreviousPage}
-      changePage={(page) => setFilters({ ...filters, page })}
+      changePage={(page) => setFilters((prev) => ({ ...prev, page }))}
       changeLimit={(limit) =>
-        setFilters({ ...filters, limit, page: DEFAULT_PAGE })
+        setFilters((prev) => ({ ...prev, limit, page: DEFAULT_PAGE }))
       }
     />
   );

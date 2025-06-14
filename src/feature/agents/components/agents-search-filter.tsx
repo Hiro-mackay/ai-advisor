@@ -8,10 +8,10 @@ export function AgentsSearchFilter() {
   const [filters, setFilters] = useAgentsFilter();
   const ref = useRef<HTMLInputElement>(null);
   const debouncedOnChange = useDebouncedInput((value) => {
-    setFilters({
-      ...filters,
+    setFilters((prev) => ({
+      ...prev,
       search: value,
-    });
+    }));
   });
 
   return (
