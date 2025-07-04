@@ -42,11 +42,24 @@ export function AgentForm({
           queryKey: trpc.agents.getAll.queryKey(),
         });
 
-        if (defaultValues?.id) {
-          queryClient.invalidateQueries(
-            trpc.agents.getById.queryOptions({ id: defaultValues.id })
-          );
-        }
+        onSuccess?.(data);
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    })
+  );
+
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.agents.getAll.queryKey(),
+        });
+
+        queryClient.invalidateQueries(
+          trpc.agents.getById.queryOptions({ id: data.id })
+        );
 
         onSuccess?.(data);
       },
@@ -62,11 +75,17 @@ export function AgentForm({
   });
 
   const isEditable = !!defaultValues?.id;
-  const isLoading = createAgent.isPending;
+  const isLoading = createAgent.isPending || updateAgent.isPending;
 
   const onSubmit = form.handleSubmit(async (data) => {
     if (isEditable) {
-      console.log("editable");
+      if (!defaultValues.id) {
+        throw new Error("Agent ID is required");
+      }
+      await updateAgent.mutateAsync({
+        id: defaultValues.id,
+        ...data,
+      });
     } else {
       await createAgent.mutateAsync(data);
     }
@@ -107,7 +126,12 @@ export function AgentForm({
           )}
         />
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="ghost" onClick={onCancel}>
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isLoading}
+            onClick={onCancel}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>

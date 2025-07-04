@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { VideoIcon } from "lucide-react";
 import { AgentHeader } from "./agent-header";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { RemoveAgentLoading } from "./remove-agent-loading";
+import { useDialog } from "@/hooks/use-dialog";
+import { UpdateAgentDialog } from "./update-agent-dialog";
+import { RemoveAgentDialog } from "./remove-agent-dialog";
 
 type Props = {
   agentId: string;
@@ -18,39 +18,42 @@ type Props = {
 
 export function AgentView({ agentId }: Props) {
   const trpc = useTRPC();
-  const router = useRouter();
+  const {
+    open: openUpdate,
+    onOpen: onOpenUpdate,
+    onClose: onCloseUpdate,
+  } = useDialog();
+  const {
+    open: openRemove,
+    onOpen: onOpenRemove,
+    onClose: onCloseRemove,
+  } = useDialog();
   const { data } = useSuspenseQuery(
     trpc.agents.getById.queryOptions({
       id: agentId,
     })
   );
 
-  const removeAgent = useMutation(
-    trpc.agents.remove.mutationOptions({
-      onSuccess: () => {
-        toast.success("Agent removed successfully");
-        router.push("/agents");
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-    })
-  );
-
-  if (removeAgent.isPending || removeAgent.isSuccess) {
-    return <RemoveAgentLoading name={data.name} />;
-  }
-
   return (
     <div>
       <AgentHeader
-        agentId={agentId}
         agentName={data.name}
-        onEdit={() => {}}
-        onRemove={(agentId: string) => {
-          removeAgent.mutate({ id: agentId });
-        }}
+        onEdit={onOpenUpdate}
+        onRemove={onOpenRemove}
       />
+
+      <UpdateAgentDialog
+        agent={data}
+        open={openUpdate}
+        onCancel={onCloseUpdate}
+      />
+
+      <RemoveAgentDialog
+        agent={data}
+        open={openRemove}
+        onCancel={onCloseRemove}
+      />
+
       <Card className="mt-4">
         <CardHeader>
           <div className="flex items-center gap-2">
