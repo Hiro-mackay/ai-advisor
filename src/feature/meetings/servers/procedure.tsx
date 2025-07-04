@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { meetings } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+import { TRPCError } from "@trpc/server";
 import { and, count, desc, eq, ilike } from "drizzle-orm";
 import { z } from "zod";
 import {
@@ -55,14 +56,23 @@ export const meetingsRouter = createTRPCRouter({
 
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .query<MeetingType>(async ({ input }) => {
+    .query<MeetingType>(async ({ ctx, input }) => {
       const { id } = input;
 
       const data = await db
         .select()
         .from(meetings)
-        .where(eq(meetings.id, id))
+        .where(
+          and(eq(meetings.userId, ctx.auth.session.userId), eq(meetings.id, id))
+        )
         .limit(1);
+
+      if (!data.length) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Meeting not found",
+        });
+      }
 
       return data[0];
     }),
