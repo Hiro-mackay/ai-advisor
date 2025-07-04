@@ -7,13 +7,13 @@ export const MeetingSchema = z.object({
   title: z.string(),
   description: z.string().nullish(),
   status: z.enum(meetingsStatus.enumValues),
-  startAt: z.date().nullish(),
-  endAt: z.date().nullish(),
-  transcriptUrl: z.string().nullish(),
-  recordingUrl: z.string().nullish(),
+  startAt: z.coerce.date().nullish(),
+  endAt: z.coerce.date().nullish(),
+  transcriptUrl: z.string().url().nullish(),
+  recordingUrl: z.string().url().nullish(),
   summary: z.string().nullish(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
 export type MeetingType = z.infer<typeof MeetingSchema>;

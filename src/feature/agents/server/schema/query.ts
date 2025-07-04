@@ -5,8 +5,8 @@ export const AgentSchema = z.object({
   id: z.string(),
   name: z.string(),
   instructions: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
 export type AgentType = z.infer<typeof AgentSchema>;
