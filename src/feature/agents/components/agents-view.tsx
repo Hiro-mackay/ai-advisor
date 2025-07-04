@@ -8,8 +8,10 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAgentsFilter } from "../hooks/use-agents-filter";
 import { AgentsPagination } from "./agents-pagination";
 import { AgentColumns } from "./columns";
+import { useRouter } from "next/navigation";
 
 export function AgentsView() {
+  const router = useRouter();
   const trpc = useTRPC();
   const [filters] = useAgentsFilter();
   const { data } = useSuspenseQuery(trpc.agents.getAll.queryOptions(filters));
@@ -29,6 +31,9 @@ export function AgentsView() {
             columns={AgentColumns}
             data={data.agents}
             options={{ headerState: "hidden" }}
+            onRowClick={(row) => {
+              router.push(`/agents/${row.id}`);
+            }}
           />
 
           <AgentsPagination data={data} />

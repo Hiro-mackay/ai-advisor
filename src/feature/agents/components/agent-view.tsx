@@ -8,6 +8,9 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { VideoIcon } from "lucide-react";
 import { AgentHeader } from "./agent-header";
+import { useDialog } from "@/hooks/use-dialog";
+import { UpdateAgentDialog } from "./update-agent-dialog";
+import { RemoveAgentDialog } from "./remove-agent-dialog";
 
 type Props = {
   agentId: string;
@@ -15,6 +18,16 @@ type Props = {
 
 export function AgentView({ agentId }: Props) {
   const trpc = useTRPC();
+  const {
+    open: openUpdate,
+    onOpen: onOpenUpdate,
+    onClose: onCloseUpdate,
+  } = useDialog();
+  const {
+    open: openRemove,
+    onOpen: onOpenRemove,
+    onClose: onCloseRemove,
+  } = useDialog();
   const { data } = useSuspenseQuery(
     trpc.agents.getById.queryOptions({
       id: agentId,
@@ -24,11 +37,23 @@ export function AgentView({ agentId }: Props) {
   return (
     <div>
       <AgentHeader
-        agentId={agentId}
         agentName={data.name}
-        onEdit={() => {}}
-        onRemove={() => {}}
+        onEdit={onOpenUpdate}
+        onRemove={onOpenRemove}
       />
+
+      <UpdateAgentDialog
+        agent={data}
+        open={openUpdate}
+        onCancel={onCloseUpdate}
+      />
+
+      <RemoveAgentDialog
+        agent={data}
+        open={openRemove}
+        onCancel={onCloseRemove}
+      />
+
       <Card className="mt-4">
         <CardHeader>
           <div className="flex items-center gap-2">

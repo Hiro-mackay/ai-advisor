@@ -3,7 +3,11 @@ import { agents } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { and, count, desc, eq, ilike } from "drizzle-orm";
 import z from "zod";
-import { CreateAgentSchema } from "./schema/mutation";
+import {
+  CreateAgentSchema,
+  RemoveAgentSchema,
+  UpdateAgentSchema,
+} from "./schema/mutation";
 import {
   AgentsQueryInputSchema,
   AgentsQueryType,
@@ -73,6 +77,36 @@ export const agentsRouter = createTRPCRouter({
           ...input,
           userId: ctx.auth.session.userId,
         })
+        .returning();
+
+      return data;
+    }),
+
+  remove: protectedProcedure
+    .input(RemoveAgentSchema)
+    .mutation<void>(async ({ input, ctx }) => {
+      await db
+        .delete(agents)
+        .where(
+          and(
+            eq(agents.id, input.id),
+            eq(agents.userId, ctx.auth.session.userId)
+          )
+        );
+    }),
+
+  update: protectedProcedure
+    .input(UpdateAgentSchema)
+    .mutation<AgentType>(async ({ input, ctx }) => {
+      const [data] = await db
+        .update(agents)
+        .set(input)
+        .where(
+          and(
+            eq(agents.id, input.id),
+            eq(agents.userId, ctx.auth.session.userId)
+          )
+        )
         .returning();
 
       return data;

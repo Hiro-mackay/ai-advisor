@@ -16,7 +16,6 @@ import {
 import { MoreVerticalIcon, PencilIcon, TrashIcon } from "lucide-react";
 
 type Props = {
-  agentId: string;
   agentName: string;
   onEdit: () => void;
   onRemove: () => void;
