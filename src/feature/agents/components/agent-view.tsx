@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { VideoIcon } from "lucide-react";
 import { AgentHeader } from "./agent-header";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { RemoveAgentLoading } from "./remove-agent-loading";
 
 type Props = {
   agentId: string;
@@ -15,11 +18,28 @@ type Props = {
 
 export function AgentView({ agentId }: Props) {
   const trpc = useTRPC();
+  const router = useRouter();
   const { data } = useSuspenseQuery(
     trpc.agents.getById.queryOptions({
       id: agentId,
     })
   );
+
+  const removeAgent = useMutation(
+    trpc.agents.remove.mutationOptions({
+      onSuccess: () => {
+        toast.success("Agent removed successfully");
+        router.push("/agents");
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    })
+  );
+
+  if (removeAgent.isPending || removeAgent.isSuccess) {
+    return <RemoveAgentLoading name={data.name} />;
+  }
 
   return (
     <div>
@@ -27,7 +47,9 @@ export function AgentView({ agentId }: Props) {
         agentId={agentId}
         agentName={data.name}
         onEdit={() => {}}
-        onRemove={() => {}}
+        onRemove={(agentId: string) => {
+          removeAgent.mutate({ id: agentId });
+        }}
       />
       <Card className="mt-4">
         <CardHeader>

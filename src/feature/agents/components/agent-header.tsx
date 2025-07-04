@@ -19,10 +19,10 @@ type Props = {
   agentId: string;
   agentName: string;
   onEdit: () => void;
-  onRemove: () => void;
+  onRemove: (agentId: string) => void;
 };
 
-export function AgentHeader({ agentName, onEdit, onRemove }: Props) {
+export function AgentHeader({ agentId, agentName, onEdit, onRemove }: Props) {
   return (
     <div className="flex items-center justify-between">
       <Breadcrumb>
@@ -52,7 +52,7 @@ export function AgentHeader({ agentName, onEdit, onRemove }: Props) {
             <PencilIcon className="w-4 h-4" />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={onRemove}>
+          <DropdownMenuItem onClick={() => onRemove(agentId)}>
             <TrashIcon className="w-4 h-4" />
             Delete
           </DropdownMenuItem>
