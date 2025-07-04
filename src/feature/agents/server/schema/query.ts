@@ -1,24 +1,19 @@
-import {
-  DEFAULT_LIMIT,
-  DEFAULT_PAGE,
-  MAX_LIMIT,
-  MIN_LIMIT,
-} from "@/lib/query-params";
+import { DEFAULT_LIMIT, DEFAULT_PAGE, MAX_LIMIT } from "@/lib/query-params";
 import { z } from "zod";
 
 export const AgentSchema = z.object({
   id: z.string(),
   name: z.string(),
   instructions: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
 export type AgentType = z.infer<typeof AgentSchema>;
 
 export const AgentsQueryInputSchema = z.object({
-  page: z.number().min(MIN_LIMIT).default(DEFAULT_PAGE),
-  limit: z.number().min(MIN_LIMIT).max(MAX_LIMIT).default(DEFAULT_LIMIT),
+  page: z.number().positive().default(DEFAULT_PAGE),
+  limit: z.number().positive().lte(MAX_LIMIT).default(DEFAULT_LIMIT),
   search: z.string().optional(),
 });
 

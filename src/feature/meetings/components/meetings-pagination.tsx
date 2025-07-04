@@ -1,13 +1,14 @@
-import { Pagination } from "@/components/pagination";
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from "@/lib/query-params";
-import { AgentsQueryType } from "../server/schema/query";
+import { MeetingsQueryType } from "../servers/schema/query";
+
+import { Pagination } from "@/components/pagination";
 import { useTableFilter } from "@/hooks/use-table-filter";
 
 type Props = {
-  data: AgentsQueryType;
+  data: MeetingsQueryType;
 };
 
-export function AgentsPagination({ data }: Props) {
+export function MeetingsPagination({ data }: Props) {
   const [filters, setFilters] = useTableFilter();
 
   return (

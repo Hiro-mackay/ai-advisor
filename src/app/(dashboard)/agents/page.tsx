@@ -3,7 +3,7 @@ import { LoadingState } from "@/components/component-state/loading";
 
 import { AgentsListHeader } from "@/feature/agents/components/agents-list-header";
 import { AgentsView } from "@/feature/agents/components/agents-view";
-import { loadAgentsSearchParams } from "@/feature/agents/params";
+import { loadFilterSearchParams } from "@/lib/query-params";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { SearchParams } from "nuqs";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default async function Page({ searchParams }: Props) {
-  const filters = await loadAgentsSearchParams(searchParams);
+  const filters = await loadFilterSearchParams(searchParams);
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.agents.getAll.queryOptions(filters));
 

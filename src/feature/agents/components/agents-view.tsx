@@ -5,15 +5,15 @@ import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useAgentsFilter } from "../hooks/use-agents-filter";
 import { AgentsPagination } from "./agents-pagination";
 import { AgentColumns } from "./columns";
 import { useRouter } from "next/navigation";
+import { useTableFilter } from "@/hooks/use-table-filter";
 
 export function AgentsView() {
   const router = useRouter();
   const trpc = useTRPC();
-  const [filters] = useAgentsFilter();
+  const [filters] = useTableFilter();
   const { data } = useSuspenseQuery(trpc.agents.getAll.queryOptions(filters));
 
   return (

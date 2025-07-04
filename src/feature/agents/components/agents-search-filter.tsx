@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { useDebouncedInput } from "@/hooks/use-debounced-input";
+import { useTableFilter } from "@/hooks/use-table-filter";
 import { SearchIcon, XIcon } from "lucide-react";
 import { useRef } from "react";
-import { useAgentsFilter } from "../hooks/use-agents-filter";
 
 export function AgentsSearchFilter() {
-  const [filters, setFilters] = useAgentsFilter();
+  const [filters, setFilters] = useTableFilter();
   const ref = useRef<HTMLInputElement>(null);
   const debouncedOnChange = useDebouncedInput((value) => {
     setFilters((prev) => ({
