@@ -65,7 +65,7 @@ export function AgentView({ agentId }: Props) {
             <div className="ml-auto">
               <Button variant="outline" size="sm">
                 <VideoIcon className="size-4 text-blue-500" />
-                <span>Meeting</span>
+                <span>{data.meetingCount} Meetings</span>
               </Button>
             </div>
           </div>

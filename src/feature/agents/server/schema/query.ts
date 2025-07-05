@@ -5,6 +5,7 @@ export const AgentSchema = z.object({
   id: z.string(),
   name: z.string(),
   instructions: z.string(),
+  meetingCount: z.number().default(0),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

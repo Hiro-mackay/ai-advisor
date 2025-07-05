@@ -1,7 +1,7 @@
 import { db } from "@/db";
-import { agents } from "@/db/schema";
+import { agents, meetings } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
-import { and, count, desc, eq, ilike } from "drizzle-orm";
+import { and, count, desc, eq, getTableColumns, ilike } from "drizzle-orm";
 import z from "zod";
 import {
   CreateAgentSchema,
@@ -21,14 +21,19 @@ export const agentsRouter = createTRPCRouter({
       const { page, limit, search } = input;
 
       const data = await db
-        .select()
+        .select({
+          ...getTableColumns(agents),
+          meetingCount: count(meetings.id),
+        })
         .from(agents)
+        .leftJoin(meetings, eq(agents.id, meetings.agentId))
         .where(
           and(
             eq(agents.userId, ctx.auth.session.userId),
             search ? ilike(agents.name, `%${search}%`) : undefined
           )
         )
+        .groupBy(agents.id)
         .limit(limit)
         .offset((page - 1) * limit)
         .orderBy(desc(agents.updatedAt));
@@ -57,14 +62,19 @@ export const agentsRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query<AgentType>(async ({ input, ctx }) => {
       const [data] = await db
-        .select()
+        .select({
+          ...getTableColumns(agents),
+          meetingCount: count(meetings.id),
+        })
         .from(agents)
+        .leftJoin(meetings, eq(agents.id, meetings.agentId))
         .where(
           and(
             eq(agents.id, input.id),
             eq(agents.userId, ctx.auth.session.userId)
           )
-        );
+        )
+        .groupBy(agents.id);
       return data;
     }),
 
@@ -77,9 +87,11 @@ export const agentsRouter = createTRPCRouter({
           ...input,
           userId: ctx.auth.session.userId,
         })
-        .returning();
+        .returning({
+          ...getTableColumns(agents),
+        });
 
-      return data;
+      return { ...data, meetingCount: 0 };
     }),
 
   remove: protectedProcedure
@@ -107,8 +119,15 @@ export const agentsRouter = createTRPCRouter({
             eq(agents.userId, ctx.auth.session.userId)
           )
         )
-        .returning();
+        .returning({
+          ...getTableColumns(agents),
+        });
 
-      return data;
+      const [{ count: meetingCount }] = await db
+        .select({ count: count() })
+        .from(meetings)
+        .where(eq(meetings.agentId, input.id));
+
+      return { ...data, meetingCount };
     }),
 });
