@@ -56,10 +56,7 @@ export function MeetingForm({
 
   const form = useForm<CreateMeetingType>({
     resolver: zodResolver(CreateMeetingSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-    },
+    defaultValues,
   });
 
   const onSubmit = form.handleSubmit(async (data) => {
