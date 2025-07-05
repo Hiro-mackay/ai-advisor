@@ -1,3 +1,5 @@
+"use client";
+
 import { AgentAvatar } from "@/components/avatar/agent";
 import { Button } from "@/components/ui/button";
 import {
