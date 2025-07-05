@@ -1,5 +1,5 @@
 import { useDebouncedInput } from "@/hooks/use-debounced-input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 import { XIcon } from "lucide-react";
@@ -16,20 +16,28 @@ export function SearchFilterInput({
   onChange,
 }: Props) {
   const [isDirty, setIsDirty] = useState(!!defaultValue);
+  const ref = useRef<HTMLInputElement>(null);
   const debouncedOnChange = useDebouncedInput((value) => {
     onChange(value);
     setIsDirty(!!value);
   });
+  const resetInput = () => {
+    if (ref.current) {
+      ref.current.value = "";
+    }
+  };
 
   const handleClear = () => {
     onChange("");
     setIsDirty(false);
+    resetInput();
   };
 
   return (
     <div className="relative max-w-xs">
       <SearchIcon className="size-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
       <Input
+        ref={ref}
         className="px-7"
         defaultValue={defaultValue}
         onChange={debouncedOnChange}

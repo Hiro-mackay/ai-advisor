@@ -9,7 +9,6 @@ import { MeetingColumns } from "../ui/columns";
 import { MeetingsPagination } from "../ui/meetings-pagination";
 import { useMeetingsSearchFilter } from "../../hooks/use-meetings-search-filter";
 import { MeetingType } from "../../servers/schema/query";
-import { MeetingSearchFilter } from "../ui/meeting-search-filter";
 
 export function MeetingsView() {
   const trpc = useTRPC();
@@ -33,8 +32,6 @@ export function MeetingsView() {
         </Card>
       ) : (
         <>
-          <MeetingSearchFilter />
-
           <DataTable
             columns={MeetingColumns}
             data={data.meetings}
