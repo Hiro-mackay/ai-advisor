@@ -18,6 +18,7 @@ export default async function Page({ searchParams }: Props) {
   const filters = await loadFilterSearchParams(searchParams);
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(trpc.meetings.getAll.queryOptions(filters));
+  void queryClient.prefetchQuery(trpc.agents.getAll.queryOptions({}));
 
   return (
     <div className="px-4 flex-1 flex flex-col gap-4">

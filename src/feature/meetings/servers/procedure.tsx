@@ -80,15 +80,18 @@ export const meetingsRouter = createTRPCRouter({
 
   create: protectedProcedure
     .input(CreateMeetingSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation<MeetingType>(async ({ ctx, input }) => {
       const { title, description, agentId } = input;
 
-      const data = await db.insert(meetings).values({
-        title,
-        description,
-        agentId,
-        userId: ctx.auth.session.userId,
-      });
+      const [data] = await db
+        .insert(meetings)
+        .values({
+          title,
+          description,
+          agentId,
+          userId: ctx.auth.session.userId,
+        })
+        .returning();
 
       // TODO: create meeting stream
 
@@ -97,7 +100,7 @@ export const meetingsRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(UpdateMeetingSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation<MeetingType>(async ({ ctx, input }) => {
       const { id, ...data } = input;
 
       const [updated] = await db
