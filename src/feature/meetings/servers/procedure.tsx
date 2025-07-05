@@ -27,7 +27,7 @@ export const meetingsRouter = createTRPCRouter({
           ),
         })
         .from(meetings)
-        .leftJoin(agents, eq(meetings.agentId, agents.id))
+        .innerJoin(agents, eq(meetings.agentId, agents.id))
         .where(
           and(
             eq(meetings.userId, ctx.auth.session.userId),
@@ -68,7 +68,7 @@ export const meetingsRouter = createTRPCRouter({
     .query<MeetingType>(async ({ ctx, input }) => {
       const { id } = input;
 
-      const data = await db
+      const [data] = await db
         .select({
           ...getTableColumns(meetings),
           agent: agents,
@@ -78,19 +78,20 @@ export const meetingsRouter = createTRPCRouter({
           ),
         })
         .from(meetings)
+        .innerJoin(agents, eq(meetings.agentId, agents.id))
         .where(
           and(eq(meetings.userId, ctx.auth.session.userId), eq(meetings.id, id))
         )
         .limit(1);
 
-      if (!data.length) {
+      if (!data) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Meeting not found",
         });
       }
 
-      return data[0];
+      return data;
     }),
 
   create: protectedProcedure

@@ -14,7 +14,7 @@ export const MeetingSchema = z.object({
   recordingUrl: z.string().url().nullish(),
   summary: z.string().nullish(),
   duration: z.number().default(0),
-  agent: AgentSchema.omit({ meetingCount: true }).nullable(),
+  agent: AgentSchema.omit({ meetingCount: true }),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });
