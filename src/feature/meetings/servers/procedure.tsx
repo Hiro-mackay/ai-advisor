@@ -9,6 +9,7 @@ import {
   MeetingsQueryInputSchema,
   MeetingsQueryType,
 } from "./schema/query";
+import { CreateMeetingSchema } from "./schema/mutation";
 
 export const meetingsRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -75,5 +76,22 @@ export const meetingsRouter = createTRPCRouter({
       }
 
       return data[0];
+    }),
+
+  create: protectedProcedure
+    .input(CreateMeetingSchema)
+    .mutation(async ({ ctx, input }) => {
+      const { title, description, agentId } = input;
+
+      const data = await db.insert(meetings).values({
+        title,
+        description,
+        agentId,
+        userId: ctx.auth.session.userId,
+      });
+
+      // TODO: create meeting stream
+
+      return data;
     }),
 });
