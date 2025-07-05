@@ -1,6 +1,7 @@
 import { meetingsStatus } from "@/db/schema";
 import { DEFAULT_LIMIT, DEFAULT_PAGE, MAX_LIMIT } from "@/lib/query-params";
 import { z } from "zod";
+import { AgentSchema } from "@/feature/agents/server/schema/query";
 
 export const MeetingSchema = z.object({
   id: z.string(),
@@ -12,6 +13,8 @@ export const MeetingSchema = z.object({
   transcriptUrl: z.string().url().nullish(),
   recordingUrl: z.string().url().nullish(),
   summary: z.string().nullish(),
+  duration: z.number().default(0),
+  agent: AgentSchema.omit({ meetingCount: true }).nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

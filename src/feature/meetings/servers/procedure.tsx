@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import { meetings } from "@/db/schema";
+import { agents, meetings } from "@/db/schema";
 import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { and, count, desc, eq, ilike } from "drizzle-orm";
+import { and, count, desc, eq, getTableColumns, ilike, sql } from "drizzle-orm";
 import { z } from "zod";
 import {
   MeetingType,
@@ -18,8 +18,16 @@ export const meetingsRouter = createTRPCRouter({
       const { page, limit, search } = input;
 
       const data = await db
-        .select()
+        .select({
+          ...getTableColumns(meetings),
+          agent: agents,
+          // seconds duration
+          duration: sql<number>`EXTRACT(EPOCH FROM (end_at - start_at))`.as(
+            "duration"
+          ),
+        })
         .from(meetings)
+        .leftJoin(agents, eq(meetings.agentId, agents.id))
         .where(
           and(
             eq(meetings.userId, ctx.auth.session.userId),
@@ -61,7 +69,14 @@ export const meetingsRouter = createTRPCRouter({
       const { id } = input;
 
       const data = await db
-        .select()
+        .select({
+          ...getTableColumns(meetings),
+          agent: agents,
+          // seconds duration
+          duration: sql<number>`EXTRACT(EPOCH FROM (end_at - start_at))`.as(
+            "duration"
+          ),
+        })
         .from(meetings)
         .where(
           and(eq(meetings.userId, ctx.auth.session.userId), eq(meetings.id, id))
@@ -93,9 +108,14 @@ export const meetingsRouter = createTRPCRouter({
         })
         .returning();
 
+      const [agent] = await db
+        .select()
+        .from(agents)
+        .where(eq(agents.id, agentId));
+
       // TODO: create meeting stream
 
-      return data;
+      return { ...data, duration: 0, agent };
     }),
 
   update: protectedProcedure
@@ -109,8 +129,18 @@ export const meetingsRouter = createTRPCRouter({
         .where(
           and(eq(meetings.userId, ctx.auth.session.userId), eq(meetings.id, id))
         )
-        .returning();
+        .returning({
+          ...getTableColumns(meetings),
+          duration: sql<number>`EXTRACT(EPOCH FROM (end_at - start_at))`.as(
+            "duration"
+          ),
+        });
 
-      return updated;
+      const [agent] = await db
+        .select()
+        .from(agents)
+        .where(eq(agents.id, updated.agentId));
+
+      return { ...updated, agent };
     }),
 });
