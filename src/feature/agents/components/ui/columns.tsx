@@ -28,12 +28,12 @@ export const AgentColumns: ColumnDef<AgentType>[] = [
     },
   },
   {
-    header: "meeting",
-    cell: () => {
+    header: "Meetings",
+    cell: ({ row }) => {
       return (
         <Button variant="outline">
           <VideoIcon className="size-4" />
-          <p className="text-sm">Meeting</p>
+          <p className="text-sm">{row.original.meetingCount} Meetings</p>
         </Button>
       );
     },
