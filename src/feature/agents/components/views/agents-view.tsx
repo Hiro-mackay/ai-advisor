@@ -9,6 +9,7 @@ import { AgentsPagination } from "../ui/agents-pagination";
 import { AgentColumns } from "../ui/columns";
 import { useRouter } from "next/navigation";
 import { useTableFilter } from "@/hooks/use-table-filter";
+import { AgentSearchFilter } from "../ui/agent-search-filter";
 
 export function AgentsView() {
   const router = useRouter();
@@ -27,6 +28,8 @@ export function AgentsView() {
         </Card>
       ) : (
         <>
+          <AgentSearchFilter />
+
           <DataTable
             columns={AgentColumns}
             data={data.agents}

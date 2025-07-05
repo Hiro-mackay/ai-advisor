@@ -2,32 +2,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MeetingType } from "../../servers/schema/query";
 import { AgentAvatar } from "@/components/avatar/agent";
 import { cn, formatDuration } from "@/lib/utils";
-import {
-  ClockArrowUpIcon,
-  LucideIcon,
-  LoaderIcon,
-  CheckCircleIcon,
-  PlayCircleIcon,
-  XCircleIcon,
-  ClockFadingIcon,
-} from "lucide-react";
+import { ClockFadingIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
-const StatusIconMap: Record<MeetingType["status"], LucideIcon> = {
-  upcoming: ClockArrowUpIcon,
-  processing: LoaderIcon,
-  active: PlayCircleIcon,
-  completed: CheckCircleIcon,
-  cancelled: XCircleIcon,
-};
-
-const StatusColorMap: Record<MeetingType["status"], string> = {
-  upcoming: "text-slate-500 bg-slate-50 border-slate-200",
-  processing: "text-amber-500 bg-amber-50 border-amber-200",
-  active: "text-blue-500 bg-blue-50 border-blue-200",
-  completed: "text-emerald-500 bg-emerald-50 border-emerald-200",
-  cancelled: "text-rose-500 bg-rose-50 border-rose-200",
-};
+import { StatusIconMap, StatusColorMap } from "../../utils/meeting-status";
 
 export const MeetingColumns: ColumnDef<MeetingType>[] = [
   {

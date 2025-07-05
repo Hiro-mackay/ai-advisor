@@ -5,6 +5,8 @@ import { MeetingType } from "../../servers/schema/query";
 import { meetingsStatus } from "@/db/schema";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
+import { StatusColorMap, StatusIconMap } from "../../utils/meeting-status";
+import { AgentAvatar } from "@/components/avatar/agent";
 
 export function MeetingSearchFilter() {
   const trpc = useTRPC();
@@ -18,10 +20,18 @@ export function MeetingSearchFilter() {
     }));
   };
 
-  const statusOptions = meetingsStatus.enumValues.map((status) => ({
-    label: status,
-    value: status,
-  }));
+  const statusOptions = meetingsStatus.enumValues.map((status) => {
+    const Icon = StatusIconMap[status];
+    return {
+      label: (
+        <div className="flex items-center gap-2">
+          <Icon className={StatusColorMap[status]} />
+          <span>{status}</span>
+        </div>
+      ),
+      value: status,
+    };
+  });
 
   const handleStatusChange = (value: string) => {
     setFilters((prev) => ({
@@ -32,7 +42,12 @@ export function MeetingSearchFilter() {
 
   const agentOptions =
     data?.agents.map((agent) => ({
-      label: agent.name,
+      label: (
+        <div className="flex items-center gap-2">
+          <AgentAvatar agent={agent} size={20} />
+          <p className="truncate">{agent.name}</p>
+        </div>
+      ),
       value: agent.id,
     })) ?? [];
 
@@ -50,7 +65,7 @@ export function MeetingSearchFilter() {
         onChange={handleSearch}
       />
       <SearchFilterSelect
-        className="w-[150px]"
+        className="w-[200px]"
         placeholder="Status filter"
         defaultValue={filters.status ?? undefined}
         options={statusOptions}
@@ -58,7 +73,7 @@ export function MeetingSearchFilter() {
       />
       <SearchFilterSelect
         placeholder="Agent filter"
-        className="w-[150px]"
+        className="w-[200px]"
         defaultValue={filters.agentId ?? undefined}
         options={agentOptions}
         onChange={handleAgentChange}

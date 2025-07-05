@@ -4,7 +4,7 @@ import { DEFAULT_LIMIT, DEFAULT_PAGE, MAX_LIMIT } from "./query-params";
 export const QueryInputSchema = z.object({
   page: z.number().positive().default(DEFAULT_PAGE),
   limit: z.number().positive().lte(MAX_LIMIT).default(DEFAULT_LIMIT),
-  search: z.string().optional(),
+  search: z.string().nullish(),
 });
 
 export type QueryInputType = z.infer<typeof QueryInputSchema>;

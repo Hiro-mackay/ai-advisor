@@ -5,14 +5,22 @@ import { Card } from "@/components/ui/card";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { DataTable } from "@/components/ui/data-table";
-import { useTableFilter } from "@/hooks/use-table-filter";
 import { MeetingColumns } from "../ui/columns";
 import { MeetingsPagination } from "../ui/meetings-pagination";
+import { useMeetingsSearchFilter } from "../../hooks/use-meetings-search-filter";
+import { MeetingType } from "../../servers/schema/query";
+import { MeetingSearchFilter } from "../ui/meeting-search-filter";
 
 export function MeetingsView() {
   const trpc = useTRPC();
-  const [filters] = useTableFilter();
-  const { data } = useSuspenseQuery(trpc.meetings.getAll.queryOptions(filters));
+  const [filters] = useMeetingsSearchFilter();
+
+  const { data } = useSuspenseQuery(
+    trpc.meetings.getAll.queryOptions({
+      ...filters,
+      status: (filters.status as MeetingType["status"]) || undefined,
+    })
+  );
 
   return (
     <>
@@ -25,6 +33,8 @@ export function MeetingsView() {
         </Card>
       ) : (
         <>
+          <MeetingSearchFilter />
+
           <DataTable
             columns={MeetingColumns}
             data={data.meetings}

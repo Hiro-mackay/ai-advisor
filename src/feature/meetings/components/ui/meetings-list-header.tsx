@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import { useDialog } from "@/hooks/use-dialog";
 import { NewMeetingDialog } from "./new-meeting-dialog";
-import { MeetingSearchFilter } from "./meeting-search-filter";
 
 export function MeetingsListHeader() {
   const { open, onOpen, onClose } = useDialog();
@@ -19,8 +18,6 @@ export function MeetingsListHeader() {
           New Meeting
         </Button>
       </div>
-
-      <MeetingSearchFilter />
 
       <NewMeetingDialog open={open} onClose={onClose} />
     </>

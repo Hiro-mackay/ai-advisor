@@ -22,8 +22,8 @@ export const MeetingSchema = z.object({
 export type MeetingType = z.infer<typeof MeetingSchema>;
 
 export const MeetingsQueryInputSchema = QueryInputSchema.extend({
-  agentId: z.string().optional(),
-  status: z.enum(meetingsStatus.enumValues).optional(),
+  agentId: z.string().nullish(),
+  status: z.enum(meetingsStatus.enumValues).nullish(),
 });
 
 export type MeetingsQueryInputType = z.infer<typeof MeetingsQueryInputSchema>;
