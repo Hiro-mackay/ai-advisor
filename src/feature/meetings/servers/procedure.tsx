@@ -22,9 +22,10 @@ export const meetingsRouter = createTRPCRouter({
           ...getTableColumns(meetings),
           agent: agents,
           // seconds duration
-          duration: sql<number>`EXTRACT(EPOCH FROM (end_at - start_at))`.as(
-            "duration"
-          ),
+          duration:
+            sql<number>`COALESCE(EXTRACT(EPOCH FROM (end_at - start_at)), 0)`.as(
+              "duration"
+            ),
         })
         .from(meetings)
         .innerJoin(agents, eq(meetings.agentId, agents.id))
@@ -73,9 +74,10 @@ export const meetingsRouter = createTRPCRouter({
           ...getTableColumns(meetings),
           agent: agents,
           // seconds duration
-          duration: sql<number>`EXTRACT(EPOCH FROM (end_at - start_at))`.as(
-            "duration"
-          ),
+          duration:
+            sql<number>`COALESCE(EXTRACT(EPOCH FROM (end_at - start_at)), 0)`.as(
+              "duration"
+            ),
         })
         .from(meetings)
         .innerJoin(agents, eq(meetings.agentId, agents.id))
@@ -132,9 +134,10 @@ export const meetingsRouter = createTRPCRouter({
         )
         .returning({
           ...getTableColumns(meetings),
-          duration: sql<number>`EXTRACT(EPOCH FROM (end_at - start_at))`.as(
-            "duration"
-          ),
+          duration:
+            sql<number>`COALESCE(EXTRACT(EPOCH FROM (end_at - start_at)), 0)`.as(
+              "duration"
+            ),
         });
 
       const [agent] = await db
