@@ -1,7 +1,7 @@
 import { Pagination } from "@/components/pagination";
-import { DEFAULT_LIMIT, DEFAULT_PAGE } from "@/lib/query-params";
-import { AgentsQueryType } from "../server/schema/query";
 import { useTableFilter } from "@/hooks/use-table-filter";
+import { DEFAULT_LIMIT, DEFAULT_PAGE } from "@/lib/query-params";
+import { AgentsQueryType } from "../../server/schema/query";
 
 type Props = {
   data: AgentsQueryType;

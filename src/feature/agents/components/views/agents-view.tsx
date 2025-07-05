@@ -5,8 +5,8 @@ import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { AgentsPagination } from "./agents-pagination";
-import { AgentColumns } from "../columns";
+import { AgentsPagination } from "../ui/agents-pagination";
+import { AgentColumns } from "../ui/columns";
 import { useRouter } from "next/navigation";
 import { useTableFilter } from "@/hooks/use-table-filter";
 

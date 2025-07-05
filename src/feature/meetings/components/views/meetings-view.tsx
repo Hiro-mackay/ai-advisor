@@ -6,8 +6,8 @@ import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { DataTable } from "@/components/ui/data-table";
 import { useTableFilter } from "@/hooks/use-table-filter";
-import { MeetingColumns } from "./ui/columns";
-import { MeetingsPagination } from "./ui/meetings-pagination";
+import { MeetingColumns } from "../ui/columns";
+import { MeetingsPagination } from "../ui/meetings-pagination";
 
 export function MeetingsView() {
   const trpc = useTRPC();
