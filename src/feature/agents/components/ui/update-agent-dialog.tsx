@@ -1,5 +1,5 @@
 import { ResponsiveDialog } from "@/components/ui/dialog";
-import { AgentType } from "../server/schema/query";
+import { AgentType } from "../../server/schema/query";
 import { AgentForm } from "./agent-form";
 import { toast } from "sonner";
 

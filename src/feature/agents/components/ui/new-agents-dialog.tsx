@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ResponsiveDialog } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { AgentType } from "../server/schema/query";
+import { AgentType } from "../../server/schema/query";
 import { AgentForm } from "./agent-form";
 import { useRouter } from "next/navigation";
 
