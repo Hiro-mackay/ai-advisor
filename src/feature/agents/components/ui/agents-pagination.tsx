@@ -1,3 +1,5 @@
+"use client";
+
 import { Pagination } from "@/components/pagination";
 import { useTableFilter } from "@/hooks/use-table-filter";
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from "@/lib/query-params";

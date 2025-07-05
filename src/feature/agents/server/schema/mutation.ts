@@ -17,15 +17,9 @@ export const RemoveAgentSchema = z.object({
 
 export type RemoveAgentType = z.infer<typeof RemoveAgentSchema>;
 
-export const UpdateAgentSchema = z.object({
+export const UpdateAgentSchema = CreateAgentSchema.extend({
   id: z.string({
     required_error: "ID is required",
-  }),
-  name: z.string({
-    required_error: "Name is required",
-  }),
-  instructions: z.string({
-    required_error: "Instructions are required",
   }),
 });
 

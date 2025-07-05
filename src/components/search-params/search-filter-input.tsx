@@ -1,11 +1,28 @@
-import { Input } from "@/components/ui/input";
 import { useDebouncedInput } from "@/hooks/use-debounced-input";
 import { useTableFilter } from "@/hooks/use-table-filter";
-import { SearchIcon, XIcon } from "lucide-react";
 import { useRef } from "react";
+import { Input } from "../ui/input";
+import { SearchIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 
-export function AgentsSearchFilter() {
-  const [filters, setFilters] = useTableFilter();
+type Props = {
+  placeholder?: string;
+  defaultSearch?: string;
+  defaultPage?: number;
+  defaultLimit?: number;
+};
+
+export function SearchFilterInput({
+  placeholder = "Filter by...",
+  defaultSearch,
+  defaultPage,
+  defaultLimit,
+}: Props) {
+  const [filters, setFilters] = useTableFilter(
+    defaultSearch,
+    defaultPage,
+    defaultLimit
+  );
   const ref = useRef<HTMLInputElement>(null);
   const debouncedOnChange = useDebouncedInput((value) => {
     setFilters((prev) => ({
@@ -21,7 +38,7 @@ export function AgentsSearchFilter() {
         className="px-7"
         defaultValue={filters.search}
         onChange={debouncedOnChange}
-        placeholder="Filter by name"
+        placeholder={placeholder}
         ref={ref}
       />
       {filters.search && (
