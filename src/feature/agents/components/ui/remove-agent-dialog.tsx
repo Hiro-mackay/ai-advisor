@@ -7,7 +7,7 @@ import { useTRPC } from "@/trpc/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { AgentType } from "../server/schema/query";
+import { AgentType } from "../../server/schema/query";
 
 type Props = {
   agent: AgentType;

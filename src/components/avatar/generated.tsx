@@ -1,5 +1,6 @@
 import { identicon } from "@dicebear/collection";
 import { BackgroundType, createAvatar, Options, Style } from "@dicebear/core";
+import Image from "next/image";
 
 type Props = {
   seed: string;
@@ -22,5 +23,5 @@ export function GeneratedAvatar({
     radius: radius ?? size / 2,
     backgroundType,
   });
-  return <img src={avatar.toDataUri()} alt={seed} />;
+  return <Image src={avatar.toDataUri()} alt={seed} />;
 }

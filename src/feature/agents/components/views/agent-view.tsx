@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { VideoIcon } from "lucide-react";
-import { AgentHeader } from "./agent-header";
+import { AgentHeader } from "../ui/agent-header";
 import { useDialog } from "@/hooks/use-dialog";
-import { UpdateAgentDialog } from "./update-agent-dialog";
-import { RemoveAgentDialog } from "./remove-agent-dialog";
+import { UpdateAgentDialog } from "../ui/update-agent-dialog";
+import { RemoveAgentDialog } from "../ui/remove-agent-dialog";
 
 type Props = {
   agentId: string;

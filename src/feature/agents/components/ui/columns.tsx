@@ -1,8 +1,8 @@
 import { AgentAvatar } from "@/components/avatar/agent";
 import { Button } from "@/components/ui/button";
+import { AgentType } from "../../server/schema/query";
 import { ColumnDef } from "@tanstack/react-table";
 import { CornerDownRightIcon, VideoIcon } from "lucide-react";
-import { AgentType } from "../server/schema/query";
 
 export const AgentColumns: ColumnDef<AgentType>[] = [
   {

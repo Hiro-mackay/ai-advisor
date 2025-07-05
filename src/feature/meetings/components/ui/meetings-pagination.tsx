@@ -1,8 +1,7 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE } from "@/lib/query-params";
-import { MeetingsQueryType } from "../servers/schema/query";
-
 import { Pagination } from "@/components/pagination";
 import { useTableFilter } from "@/hooks/use-table-filter";
+import { MeetingsQueryType } from "../../servers/schema/query";
 
 type Props = {
   data: MeetingsQueryType;

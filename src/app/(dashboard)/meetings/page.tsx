@@ -1,8 +1,8 @@
 import { ErrorState } from "@/components/component-state/error";
 import { LoadingState } from "@/components/component-state/loading";
 
-import { MeetingsView } from "@/feature/meetings/components/meetings-view";
-import { MeetingsListHeader } from "@/feature/meetings/components/meetings-list-header";
+import { MeetingsView } from "@/feature/meetings/components/views/meetings-view";
+import { MeetingsListHeader } from "@/feature/meetings/components/ui/meetings-list-header";
 import { loadFilterSearchParams } from "@/lib/query-params";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";

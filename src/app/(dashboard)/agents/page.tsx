@@ -1,8 +1,8 @@
 import { ErrorState } from "@/components/component-state/error";
 import { LoadingState } from "@/components/component-state/loading";
 
-import { AgentsListHeader } from "@/feature/agents/components/agents-list-header";
-import { AgentsView } from "@/feature/agents/components/agents-view";
+import { AgentsListHeader } from "@/feature/agents/components/ui/agents-list-header";
+import { AgentsView } from "@/feature/agents/components/views/agents-view";
 import { loadFilterSearchParams } from "@/lib/query-params";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
