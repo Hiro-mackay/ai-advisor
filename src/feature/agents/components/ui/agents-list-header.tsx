@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { NewAgentsDialog } from "@/feature/agents/components/ui/new-agents-dialog";
 import { PlusIcon } from "lucide-react";
 import { useDialog } from "@/hooks/use-dialog";
-import { SearchFilterInput } from "@/components/search-params/search-filter-input";
+import { AgentSearchFilter } from "./agent-search-filter";
 
 export function AgentsListHeader() {
   const { open, onOpen, onClose } = useDialog();
@@ -20,7 +20,7 @@ export function AgentsListHeader() {
         </Button>
       </div>
 
-      <SearchFilterInput />
+      <AgentSearchFilter />
 
       <NewAgentsDialog open={open} onClose={onClose} />
     </>

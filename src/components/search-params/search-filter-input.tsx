@@ -1,55 +1,52 @@
 import { useDebouncedInput } from "@/hooks/use-debounced-input";
-import { useTableFilter } from "@/hooks/use-table-filter";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { SearchIcon } from "lucide-react";
 import { XIcon } from "lucide-react";
 
 type Props = {
   placeholder?: string;
-  defaultSearch?: string;
-  defaultPage?: number;
-  defaultLimit?: number;
+  defaultValue?: string;
+  onChange: (value: string) => void;
 };
 
 export function SearchFilterInput({
   placeholder = "Filter by...",
-  defaultSearch,
-  defaultPage,
-  defaultLimit,
+  defaultValue,
+  onChange,
 }: Props) {
-  const [filters, setFilters] = useTableFilter(
-    defaultSearch,
-    defaultPage,
-    defaultLimit
-  );
+  const [isDirty, setIsDirty] = useState(!!defaultValue);
   const ref = useRef<HTMLInputElement>(null);
   const debouncedOnChange = useDebouncedInput((value) => {
-    setFilters((prev) => ({
-      ...prev,
-      search: value,
-    }));
+    onChange(value);
+    setIsDirty(!!value);
   });
+  const resetInput = () => {
+    if (ref.current) {
+      ref.current.value = "";
+    }
+  };
+
+  const handleClear = () => {
+    onChange("");
+    setIsDirty(false);
+    resetInput();
+  };
 
   return (
     <div className="relative max-w-xs">
       <SearchIcon className="size-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
       <Input
+        ref={ref}
         className="px-7"
-        defaultValue={filters.search}
+        defaultValue={defaultValue}
         onChange={debouncedOnChange}
         placeholder={placeholder}
-        ref={ref}
       />
-      {filters.search && (
+      {isDirty && (
         <XIcon
           className="size-4 cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground "
-          onClick={() => {
-            setFilters({ search: "", page: 1 });
-            if (ref.current) {
-              ref.current.value = "";
-            }
-          }}
+          onClick={handleClear}
         />
       )}
     </div>
