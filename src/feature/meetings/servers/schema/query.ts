@@ -1,5 +1,5 @@
 import { meetingsStatus } from "@/db/schema";
-import { DEFAULT_LIMIT, DEFAULT_PAGE, MAX_LIMIT } from "@/lib/query-params";
+import { QueryInputSchema, QuerySchema } from "@/lib/schema";
 import { z } from "zod";
 import { AgentSchema } from "@/feature/agents/server/schema/query";
 
@@ -21,21 +21,15 @@ export const MeetingSchema = z.object({
 
 export type MeetingType = z.infer<typeof MeetingSchema>;
 
-export const MeetingsQueryInputSchema = z.object({
-  page: z.number().positive().default(DEFAULT_PAGE),
-  limit: z.number().positive().lte(MAX_LIMIT).default(DEFAULT_LIMIT),
-  search: z.string().optional(),
+export const MeetingsQueryInputSchema = QueryInputSchema.extend({
+  agentId: z.string().nullish(),
+  status: z.enum(meetingsStatus.enumValues).nullish(),
 });
 
 export type MeetingsQueryInputType = z.infer<typeof MeetingsQueryInputSchema>;
 
-export const MeetingsQuerySchema = z.object({
+export const MeetingsQuerySchema = QuerySchema.extend({
   meetings: z.array(MeetingSchema),
-  page: z.number(),
-  limit: z.number(),
-  hasNextPage: z.boolean(),
-  hasPreviousPage: z.boolean(),
-  totalPages: z.number(),
 });
 
 export type MeetingsQueryType = z.infer<typeof MeetingsQuerySchema>;

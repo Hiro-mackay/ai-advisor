@@ -24,6 +24,7 @@ type Props = {
     value: string;
     label: ReactNode;
   }[];
+  className?: string;
   placeholder?: string;
   emptyMessage?: string;
   defaultValue?: string;
@@ -33,6 +34,7 @@ type Props = {
 
 export function Combobox({
   options,
+  className,
   placeholder = "Select option...",
   emptyMessage = "No option found.",
   defaultValue,
@@ -60,7 +62,7 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[300px] justify-between"
+          className={cn("w-[300px] justify-between", className)}
         >
           {value ? (
             options.find((option) => option.value === value)?.label
@@ -70,7 +72,7 @@ export function Combobox({
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className={cn("w-[300px] p-0", className)}>
         <Command>
           <CommandInput placeholder={placeholder} className="h-9" />
           <CommandList>

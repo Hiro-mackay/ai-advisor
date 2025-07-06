@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SearchFilterInput } from "@/components/search-params/search-filter-input";
 import { PlusIcon } from "lucide-react";
 import { useDialog } from "@/hooks/use-dialog";
 import { NewMeetingDialog } from "./new-meeting-dialog";
+import { MeetingSearchFilter } from "./meeting-search-filter";
 
 export function MeetingsListHeader() {
   const { open, onOpen, onClose } = useDialog();
@@ -20,7 +20,7 @@ export function MeetingsListHeader() {
         </Button>
       </div>
 
-      <SearchFilterInput />
+      <MeetingSearchFilter />
 
       <NewMeetingDialog open={open} onClose={onClose} />
     </>
