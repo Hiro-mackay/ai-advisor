@@ -27,8 +27,8 @@ export function MeetingHeader({ meetingName, onEdit, onRemove }: Props) {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/agents" className="text-xl font-medium">
-              My Agents
+            <BreadcrumbLink href="/meetings" className="text-xl font-medium">
+              My Meetings
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
