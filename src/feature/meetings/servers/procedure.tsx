@@ -147,4 +147,16 @@ export const meetingsRouter = createTRPCRouter({
 
       return { ...updated, agent };
     }),
+
+  remove: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation<void>(async ({ ctx, input }) => {
+      const { id } = input;
+
+      await db
+        .delete(meetings)
+        .where(
+          and(eq(meetings.userId, ctx.auth.session.userId), eq(meetings.id, id))
+        );
+    }),
 });
