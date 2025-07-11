@@ -10,6 +10,8 @@ import {
   MeetingsQueryType,
 } from "./schema/query";
 import { CreateMeetingSchema, UpdateMeetingSchema } from "./schema/mutation";
+import { streamClient } from "@/lib/stream-io";
+import { AVATAR_STYLES, generateAvatarUri } from "@/lib/avatar";
 
 export const meetingsRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -96,6 +98,26 @@ export const meetingsRouter = createTRPCRouter({
       return data;
     }),
 
+  generateStreamToken: protectedProcedure.mutation<string>(async ({ ctx }) => {
+    await streamClient.upsertUsers([
+      {
+        id: ctx.auth.user.id,
+        name: ctx.auth.user.name,
+        role: "admin",
+        image: ctx.auth.user.image ?? undefined,
+      },
+    ]);
+
+    const expiration = Math.floor(Date.now() / 1000) + 60 * 60; // 1 hour
+    const issued = Math.floor(Date.now() / 1000) - 60;
+    const token = streamClient.generateUserToken({
+      user_id: ctx.auth.user.id,
+      exp: expiration,
+      validity_in_seconds: issued,
+    });
+    return token;
+  }),
+
   create: protectedProcedure
     .input(CreateMeetingSchema)
     .mutation<MeetingType>(async ({ ctx, input }) => {
@@ -116,7 +138,46 @@ export const meetingsRouter = createTRPCRouter({
         .from(agents)
         .where(eq(agents.id, agentId));
 
-      // TODO: create meeting stream
+      if (!agent) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Agent not found",
+        });
+      }
+
+      const call = streamClient.video.call("default", data.id);
+      await call.create({
+        data: {
+          created_by_id: ctx.auth.user.id,
+          custom: {
+            meetingId: data.id,
+            meetingName: data.title,
+          },
+          settings_override: {
+            transcription: {
+              language: "ja",
+              mode: "auto-on",
+              closed_caption_mode: "auto-on",
+            },
+            recording: {
+              mode: "auto-on",
+              quality: "1080p",
+            },
+          },
+        },
+      });
+
+      await streamClient.upsertUsers([
+        {
+          id: agent.id,
+          name: agent.name,
+          role: "user",
+          image: generateAvatarUri({
+            style: AVATAR_STYLES.agent,
+            seed: agent.name,
+          }),
+        },
+      ]);
 
       return { ...data, duration: 0, agent };
     }),
