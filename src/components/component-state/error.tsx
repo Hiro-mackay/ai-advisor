@@ -3,6 +3,8 @@
 import { cn } from "@/lib/utils";
 import { BotIcon } from "lucide-react";
 import { FallbackProps } from "react-error-boundary";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export function ErrorState({ error }: FallbackProps) {
   return (
@@ -12,6 +14,11 @@ export function ErrorState({ error }: FallbackProps) {
         <p className="text-2xl font-bold pt-4">Oops!</p>
       </div>
       <p className="text-muted-foreground font-semibold">{error.message}</p>
+      <div>
+        <Button asChild>
+          <Link href="/">Go back</Link>
+        </Button>
+      </div>
     </div>
   );
 }
