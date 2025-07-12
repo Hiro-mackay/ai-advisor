@@ -11,7 +11,6 @@ import {
 } from "./schema/query";
 import { CreateMeetingSchema, UpdateMeetingSchema } from "./schema/mutation";
 import { streamClient } from "@/lib/stream-io";
-import { AVATAR_STYLES, generateAvatarUri } from "@/lib/avatar";
 
 export const meetingsRouter = createTRPCRouter({
   getAll: protectedProcedure
@@ -172,10 +171,6 @@ export const meetingsRouter = createTRPCRouter({
           id: agent.id,
           name: agent.name,
           role: "user",
-          image: generateAvatarUri({
-            style: AVATAR_STYLES.agent,
-            seed: agent.name,
-          }),
         },
       ]);
 

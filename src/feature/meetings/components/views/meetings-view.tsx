@@ -9,9 +9,11 @@ import { MeetingColumns } from "../ui/columns";
 import { MeetingsPagination } from "../ui/meetings-pagination";
 import { useMeetingsSearchFilter } from "../../hooks/use-meetings-search-filter";
 import { MeetingType } from "../../servers/schema/query";
+import { useRouter } from "next/navigation";
 
 export function MeetingsView() {
   const trpc = useTRPC();
+  const router = useRouter();
   const [filters] = useMeetingsSearchFilter();
 
   const { data } = useSuspenseQuery(
@@ -36,6 +38,9 @@ export function MeetingsView() {
             columns={MeetingColumns}
             data={data.meetings}
             options={{ headerState: "hidden" }}
+            onRowClick={(row) => {
+              router.push(`/meetings/${row.id}`);
+            }}
           />
 
           <MeetingsPagination data={data} />

@@ -19,29 +19,25 @@ type Props = {
 };
 
 export function CallWaitingRoom({ meeting, onJoin }: Props) {
-  const isActive = meeting.status === "active";
-
   return (
-    <div className="flex flex-col items-center justify-center h-full max-w-xl gap-4">
-      <h2 className="text-2xl font-bold">Join {meeting.agent.name}</h2>
-      <div className="w-full h-96 bg-slate-800 rounded-lg flex justify-center items-center relative">
+    <div className="flex flex-col items-center justify-center w-full h-full max-w-xl gap-4">
+      <h2 className="text-2xl font-bold">
+        Join &quot;{meeting.agent.name}&quot;
+      </h2>
+      <div className="w-full h-96  rounded-lg flex justify-center items-center relative">
         <VideoPreview
           DisabledVideoPreview={DisabledVideoPreview}
           NoCameraPreview={NoCameraPreview}
           StartingCameraPreview={StartingCameraPreview}
         />
-        <div className="absolute bottom-4 flex justify-center">
+        <div className="absolute bottom-4 gap-2 flex justify-center">
           <ToggleAudioPreviewButton />
           <ToggleVideoPreviewButton />
         </div>
       </div>
 
       <div className="flex items-center justify-center p-4 gap-2">
-        <Button
-          className="bg-blue-500 hover:bg-blue-600"
-          disabled={!isActive}
-          onClick={onJoin}
-        >
+        <Button className="bg-blue-500 hover:bg-blue-600" onClick={onJoin}>
           Join Call
         </Button>
         <Button size="icon" className="bg-slate-700 hover:bg-slate-600" asChild>

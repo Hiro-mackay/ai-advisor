@@ -39,6 +39,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
+  console.log(payload.type, payload.created_at, payload.session_id);
+
   if (payload.type === "call.session_started") {
     const event = payload as CallSessionStartedEvent;
     const meetingId = event.call.custom?.meetingId;
