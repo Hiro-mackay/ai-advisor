@@ -2,7 +2,11 @@ import { db } from "@/db";
 import { agents, meetings } from "@/db/schema";
 import { env } from "@/lib/env";
 import { streamClient } from "@/lib/stream-io";
-import { CallSessionParticipantLeftEvent } from "@stream-io/node-sdk";
+import {
+  CallRecordingReadyEvent,
+  CallSessionParticipantLeftEvent,
+  CallTranscriptionReadyEvent,
+} from "@stream-io/node-sdk";
 import { CallSessionStartedEvent } from "@stream-io/video-react-sdk";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
@@ -30,7 +34,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
-  let payload: CallSessionStartedEvent | CallSessionParticipantLeftEvent;
+  let payload:
+    | CallSessionStartedEvent
+    | CallSessionParticipantLeftEvent
+    | CallTranscriptionReadyEvent
+    | CallRecordingReadyEvent;
 
   try {
     payload = JSON.parse(body);
@@ -39,19 +47,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
   }
 
-  console.log(payload.type, payload.created_at, payload.session_id);
+  console.log(payload.type, payload.created_at);
+
+  const meetingId = payload.call_cid.split(":")[1];
+
+  if (!meetingId) {
+    return NextResponse.json({ error: "Missing meeting id" }, { status: 400 });
+  }
 
   if (payload.type === "call.session_started") {
-    const event = payload as CallSessionStartedEvent;
-    const meetingId = event.call.custom?.meetingId;
-
-    if (!meetingId) {
-      return NextResponse.json(
-        { error: "Missing meeting id" },
-        { status: 400 }
-      );
-    }
-
     const [meetingData] = await db
       .select()
       .from(meetings)
@@ -92,18 +96,44 @@ export async function POST(req: NextRequest) {
       instructions: agentData.instructions,
     });
   } else if (payload.type === "call.session_participant_left") {
-    const event = payload as CallSessionParticipantLeftEvent;
-    const meetingId = event.call_cid.split(":")[1];
-
-    if (!meetingId) {
-      return NextResponse.json(
-        { error: "Missing meeting id" },
-        { status: 400 }
-      );
-    }
-
     const call = streamClient.video.call("default", meetingId);
     await call.end();
+  } else if (payload.type === "call.session_ended") {
+    await db
+      .update(meetings)
+      .set({
+        status: "processing",
+        endAt: new Date(),
+      })
+      .where(and(eq(meetings.id, meetingId), eq(meetings.status, "active")));
+  } else if (payload.type === "call.transcription_ready") {
+    const event = payload as CallTranscriptionReadyEvent;
+
+    const [meetingData] = await db
+      .update(meetings)
+      .set({
+        transcriptUrl: event.call_transcription.url,
+      })
+      .where(eq(meetings.id, meetingId))
+      .returning();
+
+    if (!meetingData) {
+      return NextResponse.json({ error: "Meeting not found" }, { status: 400 });
+    }
+  } else if (payload.type === "call.recording_ready") {
+    const event = payload as CallRecordingReadyEvent;
+
+    const [meetingData] = await db
+      .update(meetings)
+      .set({
+        recordingUrl: event.call_recording.url,
+      })
+      .where(eq(meetings.id, meetingId))
+      .returning();
+
+    if (!meetingData) {
+      return NextResponse.json({ error: "Meeting not found" }, { status: 400 });
+    }
   }
 
   return NextResponse.json({ status: "ok" }, { status: 200 });
