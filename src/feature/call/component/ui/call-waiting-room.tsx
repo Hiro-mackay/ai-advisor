@@ -23,7 +23,7 @@ export function CallWaitingRoom({ meeting, onJoin }: Props) {
 
   return (
     <div className="flex flex-col items-center justify-center h-full max-w-xl gap-4">
-      <h2 className="text-2xl font-bold">Join to {meeting.agent.name}</h2>
+      <h2 className="text-2xl font-bold">Join {meeting.agent.name}</h2>
       <div className="w-full h-96 bg-slate-800 rounded-lg flex justify-center items-center relative">
         <VideoPreview
           DisabledVideoPreview={DisabledVideoPreview}
@@ -44,7 +44,7 @@ export function CallWaitingRoom({ meeting, onJoin }: Props) {
         >
           Join Call
         </Button>
-        <Button size="icon" className="bg-slate-700 hover:bg-slate-600">
+        <Button size="icon" className="bg-slate-700 hover:bg-slate-600" asChild>
           <Link href={`/meetings/${meeting.id}`}>
             <Undo2Icon />
           </Link>
