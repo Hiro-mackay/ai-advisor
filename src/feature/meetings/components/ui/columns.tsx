@@ -16,7 +16,7 @@ export const MeetingColumns: ColumnDef<MeetingType>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center gap-2">
-          <AgentAvatar agent={row.original.agent} />
+          <AgentAvatar agent={row.original.agent} size={24} />
           {row.original.agent?.name}
         </div>
       );

@@ -20,7 +20,21 @@ const t = initTRPC.create({
 // Base router and procedure helpers
 export const createTRPCRouter = t.router;
 export const createCallerFactory = t.createCallerFactory;
-export const baseProcedure = t.procedure;
+export const baseProcedure = t.procedure.use(async ({ ctx, next }) => {
+  try {
+    const res = await next({ ctx });
+    return res;
+  } catch (error) {
+    if (error instanceof TRPCError) {
+      console.error(error.code, error.name, error.message);
+    } else if (error instanceof Error) {
+      console.error(error.name, error.message);
+    } else {
+      console.error(error);
+    }
+    throw error;
+  }
+});
 export const protectedProcedure = baseProcedure.use(async ({ ctx, next }) => {
   const session = await auth.api.getSession({
     headers: await headers(),
