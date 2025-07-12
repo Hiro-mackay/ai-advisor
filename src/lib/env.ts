@@ -6,4 +6,5 @@ export const env = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
   NEXT_PUBLIC_STREAM_API_KEY: process.env.NEXT_PUBLIC_STREAM_KEY as string,
   STREAM_API_SECRET: process.env.STREAM_SECRET_KEY as string,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY as string,
 };
