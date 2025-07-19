@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { agents, meetings } from "@/db/schema";
 import { env } from "@/lib/env";
+import { inngestClient } from "@/lib/inngest/client";
 import { streamClient } from "@/lib/stream-io";
 import {
   CallRecordingReadyEvent,
@@ -120,6 +121,14 @@ export async function POST(req: NextRequest) {
     if (!meetingData) {
       return NextResponse.json({ error: "Meeting not found" }, { status: 400 });
     }
+
+    await inngestClient.send({
+      name: "meeting/processing",
+      data: {
+        meetingId: meetingData.id,
+        transcriptionUrl: meetingData.transcriptUrl,
+      },
+    });
   } else if (payload.type === "call.recording_ready") {
     const event = payload as CallRecordingReadyEvent;
 
